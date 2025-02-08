@@ -45,7 +45,8 @@ export async function POST(req: NextRequest) {
       // Stream the article
       const resultArticle = streamText({
         model,
-        system: `You are a SEO expert. You are going to generate a SEO article based on a content brief.`,
+        system: `You are a SEO expert. You are going to generate a SEO article based on a content brief. use one of these titles that you have provided.
+        Titles: ${resultTitle.text}`,
         prompt: `Create a SEO article based on the following content brief: ${resultContentBrief.text}`,
       });
 
