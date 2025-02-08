@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useChat } from 'ai/react';
 import Markdown from 'react-markdown';
 import FloatingButton from '@/components/FloatingButton';
+import remarkGfm from 'remark-gfm';
 
 export default function Page() {
   const { messages, input, handleSubmit, handleInputChange, isLoading, data, setData } = useChat();
@@ -30,7 +31,7 @@ export default function Page() {
           <div key={message.id} className={`p-4 rounded-lg shadow-md ${message.role === 'user' ? 'bg-blue-100' : 'bg-white'}`}>
             <div className="font-bold mb-2 text-black">{`${message.role}: `}</div>
             <div className="mb-2 text-black">
-              <Markdown className='text-black'>{message.content || streamedData}</Markdown>
+              <Markdown remarkPlugins={[remarkGfm]} className='text-black leading-7'>{message.content || streamedData}</Markdown>
             </div>
             <div className="space-y-2">
               {message.experimental_attachments
