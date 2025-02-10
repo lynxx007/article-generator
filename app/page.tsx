@@ -8,6 +8,9 @@ import remarkGfm from 'remark-gfm';
 
 export default function Page() {
   const { messages, input, handleSubmit, handleInputChange, isLoading, data, setData } = useChat();
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [article, setArticle] = useState('');
   const [files, setFiles] = useState<FileList | undefined>(undefined);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [streamedData, setStreamedData] = useState<string>('');
@@ -19,39 +22,75 @@ export default function Page() {
 
   useEffect(() => {
     if (data) {
-      messages[messages.length - 1].content = data.map(d => d).join('');
-      setStreamedData(data.map(d => d).join(''));
+      const fullData = data.map(d => (typeof d === 'string' ? d : '')).join('');
+  
+      const titleMatch = fullData.match(/\*\*\*~~~~Title~~~\*\*\*\n\n([\s\S]*?)\n\n\*\*\*~~~Content Brief~~~\*\*\*/);
+      const contentBriefMatch = fullData.match(/\*\*\*~~~Content Brief~~~\*\*\*\n\n([\s\S]*?)\n\n\*\*\*~~~Article~~~\*\*\*/);
+      const articleMatch = fullData.match(/\*\*\*~~~Article~~~\*\*\*\n\n([\s\S]*)/);
+  
+      if (titleMatch) setTitle(titleMatch[1].trim());
+      if (contentBriefMatch) setContent(contentBriefMatch[1].trim());
+      if (articleMatch) setArticle(articleMatch[1].trim());
+  
+      setStreamedData(fullData);
     }
   }, [data]);
 
   return (
     <div className="font-sans p-6 bg-gray-100 min-h-screen flex flex-col items-center">
       <div className="w-full max-w-7xl space-y-4">
-        {messages.map(message => (
-          <div key={message.id} className={`p-4 rounded-lg shadow-md ${message.role === 'user' ? 'bg-blue-100' : 'bg-white'}`}>
-            <div className="font-bold mb-2 text-black">{`${message.role}: `}</div>
+          {title ? 
+          <div className={`p-4 rounded-lg shadow-md`}>
+            <div className="font-bold mb-2 text-black">Title</div>
             <div className="mb-2 text-black">
-              <Markdown remarkPlugins={[remarkGfm]} className='text-black leading-7'>{message.content || streamedData}</Markdown>
+              <Markdown remarkPlugins={[remarkGfm]} className='text-black leading-7'>{title}</Markdown>
             </div>
-            <div className="space-y-2">
-              {message.experimental_attachments
-                ?.filter(attachment => attachment.contentType?.startsWith('image/'))
-                .map((attachment, index) => (
-                  <img
-                    key={`${message.id}-${index}`}
-                    src={attachment.url}
-                    alt={attachment.name}
-                    className="max-w-full rounded-lg"
-                  />
-                ))}
+          </div> : isLoading && 
+          // Spinner
+          <div className={`p-4 rounded-lg shadow-md`}>
+            <div className="font-bold mb-2 text-black">Title</div>
+            <div className="mb-2 text-black">
+              <Markdown remarkPlugins={[remarkGfm]} className='text-black leading-7'>Generating title...</Markdown>
             </div>
           </div>
-        ))}
+          }
+          {content ? 
+          <div className={`p-4 rounded-lg shadow-md`}>
+            <div className="font-bold mb-2 text-black">Content Brief</div>
+            <div className="mb-2 text-black">
+              <Markdown remarkPlugins={[remarkGfm]} className='text-black leading-7'>{content}</Markdown>
+            </div>
+          </div>: isLoading && 
+          // Spinner
+          <div className={`p-4 rounded-lg shadow-md`}>
+            <div className="font-bold mb-2 text-black">Content Brief</div>
+            <div className="mb-2 text-black">
+              <Markdown remarkPlugins={[remarkGfm]} className='text-black leading-7'>Generating content brief...</Markdown>
+            </div>
+          </div>
+          }
+          {article ? <div className={`p-4 rounded-lg shadow-md`}>
+            <div className="font-bold mb-2 text-black">Article</div>
+            <div className="mb-2 text-black">
+              <Markdown remarkPlugins={[remarkGfm]} className='text-black leading-7'>{article}</Markdown>
+            </div>
+          </div> : isLoading && 
+          // Spinner
+          <div className={`p-4 rounded-lg shadow-md`}>
+            <div className="font-bold mb-2 text-black">Article</div>
+            <div className="mb-2 text-black">
+              <Markdown remarkPlugins={[remarkGfm]} className='text-black leading-7'>Generating article...</Markdown>
+            </div>
+          </div>
+          }
       </div>
 
       <form
         onSubmit={event => {
           messages.length = 0
+          setTitle('');
+          setContent('');
+          setArticle('');
           setData(undefined)
           handleSubmit(event, {
             experimental_attachments: files,
