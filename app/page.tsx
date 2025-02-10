@@ -40,14 +40,14 @@ export default function Page() {
     <div className="font-sans p-6 bg-gray-100 min-h-screen flex flex-col items-center">
       <div className="w-full max-w-7xl space-y-4">
           {title ? 
-          <div className={`p-4 rounded-lg shadow-md`}>
-            <div className="font-bold mb-2 text-black">Title</div>
+          <div className={`p-4 rounded-lg shadow-sm border-4`}>
+            <div className="font-bold mb-2 text-black text-xl">Title</div>
             <div className="mb-2 text-black">
               <Markdown remarkPlugins={[remarkGfm]} className='text-black leading-7'>{title}</Markdown>
             </div>
           </div> : isLoading && 
-          // Spinner
-          <div className={`p-4 rounded-lg shadow-md`}>
+          // Loading
+          <div className={`p-4 rounded-lg shadow-sm border-4`}>
             <div className="font-bold mb-2 text-black">Title</div>
             <div className="mb-2 text-black">
               <Markdown remarkPlugins={[remarkGfm]} className='text-black leading-7'>Generating title...</Markdown>
@@ -55,28 +55,28 @@ export default function Page() {
           </div>
           }
           {content ? 
-          <div className={`p-4 rounded-lg shadow-md`}>
-            <div className="font-bold mb-2 text-black">Content Brief</div>
+          <div className={`p-4 rounded-lg shadow-sm border-4`}>
+            <div className="font-bold mb-2 text-black text-xl">Content Brief</div>
             <div className="mb-2 text-black">
               <Markdown remarkPlugins={[remarkGfm]} className='text-black leading-7'>{content}</Markdown>
             </div>
           </div>: isLoading && 
-          // Spinner
-          <div className={`p-4 rounded-lg shadow-md`}>
+          // Loading
+          <div className={`p-4 rounded-lg shadow-sm border-4`}>
             <div className="font-bold mb-2 text-black">Content Brief</div>
             <div className="mb-2 text-black">
               <Markdown remarkPlugins={[remarkGfm]} className='text-black leading-7'>Generating content brief...</Markdown>
             </div>
           </div>
           }
-          {article ? <div className={`p-4 rounded-lg shadow-md`}>
-            <div className="font-bold mb-2 text-black">Article</div>
+          {article ? <div className={`p-4 rounded-lg shadow-sm border-4`}>
+            <div className="font-bold mb-2 text-black text-xl">Article</div>
             <div className="mb-2 text-black">
               <Markdown remarkPlugins={[remarkGfm]} className='text-black leading-7'>{article}</Markdown>
             </div>
           </div> : isLoading && 
-          // Spinner
-          <div className={`p-4 rounded-lg shadow-md`}>
+          // Loading
+          <div className={`p-4 rounded-lg shadow-sm border-4`}>
             <div className="font-bold mb-2 text-black">Article</div>
             <div className="mb-2 text-black">
               <Markdown remarkPlugins={[remarkGfm]} className='text-black leading-7'>Generating article...</Markdown>
