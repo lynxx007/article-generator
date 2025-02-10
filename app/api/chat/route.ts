@@ -9,7 +9,7 @@ export const maxDuration = 30;
 
 export async function POST(req: NextRequest) {
   const { messages } = await req.json();
-  const model = google('gemini-1.5-flash');
+  const model = google('gemini-1.5-flash-8b');
 
   return createDataStreamResponse({
     status: 200,
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
         let title = '';
         const resultTitle = streamText({
           model,
-          system: `You are a SEO expert. You are going to generate a title for SEO articles based on a file user provided that contains keywords. Use the same languange as users ask to answer the questions.`,
+          system: `You are a SEO expert. You are going to generate some titles for SEO articles based on a file user provided that contains keywords. Use the same languange as users ask to answer the questions.`,
           messages,
         });
 
